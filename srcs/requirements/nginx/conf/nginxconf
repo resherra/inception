@@ -1,0 +1,21 @@
+server {
+    listen 443 ssl;
+    server_name recherra.42.fr;
+
+    ssl_certificate /certs/server.crt;
+    ssl_certificate_key /certs/server.key;
+    ssl_protocols TLSv1.2;
+
+    root /var/www/html;
+    index index.php index.html;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+       
+    location ~ \.php$ {
+        fastcgi_pass wordpress:9000;
+	include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+}

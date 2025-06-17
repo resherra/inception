@@ -1,11 +1,40 @@
-version: '3.8'
-
 services:
+  mariadb:
+    image: mariadb
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    container_name: mariadb
+    volumes:
+      - db_data:/var/lib/mysql
+    env_file:
+      - .env
+    networks:
+      - app-network
+    restart: always
+
+  wordpress:
+    image: wordpress
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    container_name: wordpress
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    networks:
+      - app-network
+    restart: always
+
   nginx:
+    image: nginx
     build:
       context: ./requirements/nginx
       dockerfile: Dockerfile
-    image: nginx
+    container_name: nginx
     ports:
       - "443:443"
     volumes:
@@ -14,43 +43,7 @@ services:
       - wordpress
     networks:
       - app-network
-
-  mariadb:
-    build:
-      context: ./requirements/mariadb
-      dockerfile: Dockerfile
-    image: mariadb
-    volumes:
-      - db_data:/var/lib/mysql
-    env_file:
-      - .env
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  wordpress:
-    build:
-      context: ./requirements/wordpress
-      dockerfile: Dockerfile
-    image: wordpress
-    volumes:
-      - wordpress_data:/var/www/html
-    depends_on:
-      mariadb:
-        condition: service_healthy
-    env_file:
-      - .env
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    restart: always
 
 volumes:
   wordpress_data:

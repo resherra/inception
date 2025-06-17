@@ -1,4 +1,4 @@
-FROM alpine:3.20
+FROM alpine:3.22
 
 RUN apk update && apk add mariadb mariadb-client
 

@@ -63,4 +63,5 @@ volumes:
 
 networks:
   app-network:
+    name: inception_network
     driver: bridge

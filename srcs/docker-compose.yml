@@ -3,7 +3,6 @@ services:
     image: mariadb
     build:
       context: ./requirements/mariadb
-      dockerfile: Dockerfile
     container_name: mariadb
     volumes:
       - db_data:/var/lib/mysql
@@ -17,7 +16,6 @@ services:
     image: wordpress
     build:
       context: ./requirements/wordpress
-      dockerfile: Dockerfile
     container_name: wordpress
     volumes:
       - wordpress_data:/var/www/html
@@ -33,7 +31,6 @@ services:
     image: nginx
     build:
       context: ./requirements/nginx
-      dockerfile: Dockerfile
     container_name: nginx
     ports:
       - "443:443"
@@ -64,4 +61,3 @@ volumes:
 networks:
   app-network:
     name: inception_network
-    driver: bridge

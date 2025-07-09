@@ -19,8 +19,7 @@ all:
 	@sudo sh -c 'if ! grep -q "${DOMAIN}" /etc/hosts; then echo "127.0.0.1 ${DOMAIN}" >> /etc/hosts; fi'
 
 	@echo "\n$(YELLOW)start building...$(NC)\n"
-	@cd srcs && docker compose up --build
-# cd srcs && docker compose build --no-cache && docker compose up
+ 	@cd srcs && docker compose build --no-cache && docker compose up
 
 down:
 	@cd srcs && docker compose down  -v --rmi local
